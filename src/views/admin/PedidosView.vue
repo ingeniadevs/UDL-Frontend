@@ -373,9 +373,7 @@ async function loadPedidos() {
   loading.value = true
   errorMessage.value = ''
   try {
-    console.log('Cargando pedidos...')
     const result = await pedidosService.getAll()
-    console.log('Pedidos cargados:', result)
     pedidos.value = result || []
   } catch (error) {
     console.error('Error al cargar pedidos:', error)
