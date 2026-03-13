@@ -1,5 +1,8 @@
 # Club Socios - Frontend Vue.js
 
+> **⚠️ Arquitectura v2.0** - El frontend ahora llama directamente al backend sin proxy de nginx.  
+> **📖 Importante**: Lee [docs/ARCHITECTURE_CHANGE.md](docs/ARCHITECTURE_CHANGE.md) o [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md)
+
 Sistema de gestión de Club de Socios desarrollado con Vue 3, Vite, y PrimeVue.
 
 ## 🚀 Inicio Rápido
@@ -16,14 +19,16 @@ npm run dev
 
 La aplicación estará disponible en `http://localhost:5001`
 
-### Deploy en Railway
+### Deploy en Railway (v2.0)
 
-Configurar variable de entorno:
-```
-BACKEND_URL=https://tu-backend.up.railway.app
+**Build Variable** (IMPORTANTE: debe ser Build Variable):
+```bash
+VITE_API_URL=https://tu-backend.up.railway.app/api
 ```
 
 Railway detectará automáticamente el `Dockerfile` y desplegará la aplicación.
+
+**📖 Guía completa**: [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md)
 
 ## 📚 Documentación Completa
 
@@ -68,22 +73,28 @@ El sistema tiene dos tipos de usuarios:
 ## 🌐 Variables de Entorno
 
 ### Desarrollo
-No se requieren variables de entorno. El proxy de Vite redirige automáticamente a `http://localhost:5055` (puerto configurable en vite.config.js)
+No se requieren variables de entorno. El proxy de Vite redirige automáticamente a `http://localhost:5055`
+
+O puedes crear `.env.local`:
+```bash
+VITE_API_URL=http://localhost:5055/api
+```
 
 ### Producción (Railway)
+**Build Variable** (importante: debe ser Build Variable, no Environment Variable):
 ```bash
-BACKEND_URL=https://tu-backend.up.railway.app
-# Nota: Backend expone puerto 8080 internamente, Railway maneja el enrutamiento
+VITE_API_URL=https://tu-backend.up.railway.app/api
+# Nota: Debe incluir /api al final
 ```
 
 ## 🐳 Docker
 
 ```bash
-# Build
-docker build -t club-socios-frontend .
+# Build (pasar URL del backend)
+docker build --build-arg VITE_API_URL=https://backend.com/api -t club-socios-frontend .
 
 # Run
-docker run -p 80:80 -e BACKEND_URL=https://backend.com club-socios-frontend
+docker run -p 80:80 club-socios-frontend
 ```
 
 ## 📝 Scripts Disponibles

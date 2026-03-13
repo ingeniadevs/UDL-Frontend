@@ -5,6 +5,54 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [2.0.0] - 2026-03-12
+
+### 🔄 Cambio Mayor - Arquitectura Simplificada
+
+**Cambio de arquitectura**: El frontend ahora llama directamente al backend sin usar nginx como proxy.
+
+#### 🔧 Modificado
+
+**Infraestructura**
+- `nginx.conf` - Simplificado: eliminadas secciones de proxy, solo sirve archivos estáticos
+- `Dockerfile` - Agregado `ARG VITE_API_URL` para build-time configuration
+- `docker-entrypoint.sh` - Eliminado (ya no necesario)
+- `src/services/api.js` - Ahora usa `import.meta.env.VITE_API_URL`
+- `.env.example` - Actualizado con `VITE_API_URL` en lugar de `BACKEND_URL`
+
+**Documentación**
+- Todos los docs actualizados con nueva arquitectura
+- `docs/ARCHITECTURE_CHANGE.md` - Nueva guía explicando el cambio
+- `docs/RAILWAY.md` - Actualizado para Build Variables
+- `docs/DEPLOYMENT.md` - Actualizado proceso de deployment
+- `docs/QUICKSTART.md` - Actualizado configuración rápida
+- `README.md` - Actualizado variables de entorno
+
+#### ⚠️ Breaking Changes
+
+- **Railway**: Ahora requiere `VITE_API_URL` como **Build Variable** (no Environment Variable)
+- **Docker**: Requiere `--build-arg VITE_API_URL=...` durante el build
+- **CORS**: Debe configurarse en el backend (antes no era necesario con proxy)
+- **Cambiar backend**: Ahora requiere rebuild completo (antes solo redeploy)
+
+#### ✨ Ventajas
+
+- ✅ Nginx más simple (solo archivos estáticos)
+- ✅ Menos capas (llamada directa)
+- ✅ Arquitectura más estándar para SPAs
+- ✅ Mejor debugging (URLs visibles en DevTools)
+- ✅ CORS explícito (más seguro)
+
+#### 📋 Migración desde v1.x
+
+1. Railway → Variables → Cambiar a "Build Variables"
+2. Eliminar `BACKEND_URL`
+3. Agregar `VITE_API_URL=https://backend.../api`
+4. Configurar CORS en backend
+5. Redeploy
+
+Ver [docs/ARCHITECTURE_CHANGE.md](docs/ARCHITECTURE_CHANGE.md) para detalles completos.
+
 ## [1.0.1] - 2026-03-12
 
 ### 🔧 Actualizado

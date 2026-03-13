@@ -2,14 +2,37 @@
 
 Bienvenido a la documentación del Club Socios Frontend. Esta guía te ayudará a navegar por toda la documentación disponible.
 
+## ⚠️ Importante - Nueva Arquitectura v2.0
+
+El frontend ahora llama **directamente** al backend sin proxy de nginx. 
+
+**📖 Lee primero**: [Cambio de Arquitectura](ARCHITECTURE_CHANGE.md) | [Referencia Rápida](QUICK_REFERENCE.md)
+
+---
+
 ## 🚀 Para Empezar
 
 Si es tu primera vez con el proyecto, comienza aquí:
 
 1. **[README Principal](README.md)** - Descripción general y características del proyecto
-2. **[Guía de Desarrollo](DEVELOPMENT.md)** - Setup local y primeros pasos
+2. **[Referencia Rápida](QUICK_REFERENCE.md)** - ⭐ Configuración rápida v2.0
+3. **[Guía de Desarrollo](DEVELOPMENT.md)** - Setup local y primeros pasos
 
 ## 📖 Documentación por Categoría
+
+### ⚠️ Arquitectura v2.0 (Nuevo)
+
+- **[Cambio de Arquitectura](ARCHITECTURE_CHANGE.md)** ⭐ **IMPORTANTE**
+  - Explicación del cambio a llamada directa
+  - Diferencias con v1.x
+  - Guía de migración completa
+  - Troubleshooting específico
+
+- **[Referencia Rápida](QUICK_REFERENCE.md)**
+  - Configuración en Railway
+  - Checklist de verificación
+  - Solución rápida de problemas
+  - Comandos útiles
 
 ### 🏗️ Arquitectura y Estructura
 
@@ -144,6 +167,8 @@ const mensaje = ref('Hola Mundo')
 
 | Necesito... | Ver documento |
 |------------|---------------|
+| **Configurar Railway con nueva arquitectura** | **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** ⭐ |
+| **Entender el cambio de arquitectura** | **[ARCHITECTURE_CHANGE.md](ARCHITECTURE_CHANGE.md)** |
 | Configurar el proyecto localmente | [DEVELOPMENT.md](DEVELOPMENT.md#setup-inicial) |
 | Desplegar en Railway | [DEPLOYMENT.md](DEPLOYMENT.md) |
 | Ver endpoints disponibles | [API.md](API.md) |
@@ -152,8 +177,8 @@ const mensaje = ref('Hola Mundo')
 | Crear componentes | [DEVELOPMENT.md](DEVELOPMENT.md#creando-componentes) |
 | Trabajar con rutas | [DEVELOPMENT.md](DEVELOPMENT.md#rutas-y-navegación) |
 | Usar Pinia stores | [DEVELOPMENT.md](DEVELOPMENT.md#state-management-con-pinia) |
-| Configurar variables de entorno | [RAILWAY.md](RAILWAY.md#configurar-variables-de-entorno) |
-| Solucionar problemas comunes | [RAILWAY.md](RAILWAY.md#troubleshooting) |
+| Configurar variables de entorno | [QUICK_REFERENCE.md](QUICK_REFERENCE.md) |
+| Solucionar problemas comunes | [ARCHITECTURE_CHANGE.md](ARCHITECTURE_CHANGE.md#troubleshooting) |
 | Ver cambios del proyecto | [CHANGELOG.md](../CHANGELOG.md) |
 
 ### Por Tecnología
@@ -216,15 +241,17 @@ Si encuentras algo que falta o que podría mejorar:
 
 ```
 docs/
-├── INDEX.md              # Este archivo - índice de toda la documentación
-├── README.md             # Descripción general del proyecto
-├── QUICKSTART.md         # Guía rápida de deployment en Railway
-├── ARCHITECTURE.md       # Arquitectura y diseño del sistema
-├── DEVELOPMENT.md        # Guía de desarrollo local
-├── RAILWAY.md            # Guía de Railway (referencia técnica)
-├── DEPLOYMENT.md         # Guía paso a paso de deployment
-├── API.md                # Referencia de API del backend
-└── PORTS.md              # Configuración de puertos (desarrollo y producción)
+├── INDEX.md                # Este archivo - índice de toda la documentación
+├── QUICK_REFERENCE.md      # ⭐ Referencia rápida v2.0
+├── ARCHITECTURE_CHANGE.md  # ⭐ Explicación del cambio de arquitectura
+├── README.md               # Descripción general del proyecto
+├── QUICKSTART.md           # Guía rápida de deployment en Railway
+├── ARCHITECTURE.md         # Arquitectura y diseño del sistema
+├── DEVELOPMENT.md          # Guía de desarrollo local
+├── RAILWAY.md              # Guía de Railway (referencia técnica)
+├── DEPLOYMENT.md           # Guía paso a paso de deployment
+├── API.md                  # Referencia de API del backend
+└── PORTS.md                # Configuración de puertos (desarrollo y producción)
 ```
 
 ## 🔄 Mantenimiento de la Documentación
@@ -237,26 +264,37 @@ Esta documentación debe actualizarse cuando:
 - Se descubren soluciones a problemas comunes
 - Se actualizan dependencias importantes
 
-## 🔌 Referencia Técnica - Configuración de Puertos
+## 🔌 Referencia Técnica - Configuración v2.0
+
+### Variables de Entorno
+
+**v2.0 - Llamada Directa**:
+- **Variable**: `VITE_API_URL` (Build Variable)
+- **Valor**: `https://backend.../api` (incluir `/api`)
+- **Cuándo**: Build time (se "hornea" en el código)
+- **Dónde**: Railway → Variables → **Build Variables**
+
+**v1.x - Proxy** (deprecated):
+- ~~`BACKEND_URL`~~ (ya no se usa)
 
 ### Desarrollo Local
 - **Frontend**: Puerto 5001 (Vite dev server)
 - **Backend**: Puerto 5055 (configurable en vite.config.js)
-- **Proxy**: Vite redirige `/api` y `/uploads` al backend
+- **Proxy**: Vite redirige `/api` al backend (o usa `VITE_API_URL` directamente)
 
 ### Producción (Railway)
 - **Frontend**: Puerto 80 interno (Nginx) → Railway lo expone vía HTTPS
 - **Backend**: Puerto 8080 interno → Railway lo expone vía HTTPS
-- **Configuración**: Se usa `BACKEND_URL` con la URL completa (https://...)
-- **Importante**: NO incluir puerto en `BACKEND_URL`, Railway maneja el enrutamiento
+- **Configuración**: `VITE_API_URL` en Build Variables
+- **Llamada**: JavaScript → Backend directamente (sin proxy de nginx)
 
-### Docker Local
-```bash
-# Frontend
-docker run -p 80:80 -e BACKEND_URL=http://backend:8080 frontend
-
-# Backend (referencia)
-docker run -p 8080:8080 backend
+### CORS Requerido
+```javascript
+// Backend debe configurar CORS
+cors({
+  origin: 'https://tu-frontend.up.railway.app',
+  credentials: true
+})
 ```
 
-Última actualización: Marzo 2026
+Última actualización: Marzo 2026 - **Arquitectura v2.0**

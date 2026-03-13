@@ -5,8 +5,8 @@ Guía ultra-rápida para desarrolladores que ya conocen Railway y solo necesitan
 ## 🎯 TL;DR
 
 ```bash
-# 1. Variables de entorno en Railway
-BACKEND_URL=https://tu-backend.up.railway.app
+# 1. Build Variable en Railway (NO Environment Variable)
+VITE_API_URL=https://tu-backend.up.railway.app/api
 
 # 2. Push a GitHub
 git push origin main
@@ -43,13 +43,13 @@ git push origin main
 ### 2. Variables de Entorno
 
 ```bash
-BACKEND_URL=https://club-socios-backend-production.up.railway.app
+VITE_API_URL=https://club-socios-backend-production.up.railway.app/api
 ```
 
 **⚠️ IMPORTANTE:**
-- Sin slash final
-- Railway maneja el puerto automáticamente (backend puerto 8080 interno)
-- NO incluyas el puerto en la URL
+- Debe ser **Build Variable**, no Environment Variable
+- Debe incluir `/api` al final
+- Railway Dashboard → Variables → Cambiar a pestaña "Build Variables"
 
 ### 3. Dominio
 

@@ -18,17 +18,20 @@
 
 ### 2. Configurar Variables de Entorno
 
-En el dashboard de Railway, ve a la pestaña **Variables** del servicio frontend y añade:
+En el dashboard de Railway, ve a la pestaña **Variables** del servicio frontend:
+
+**Cambia a "Build Variables"** (pestaña superior)
 
 ```bash
-BACKEND_URL=https://tu-backend-production.up.railway.app
+VITE_API_URL=https://tu-backend-production.up.railway.app/api
 ```
 
 **⚠️ Importante**: 
-- No incluyas el slash final en la URL
-- Usa la URL pública generada por Railway para tu servicio backend (Puerto interno: 8080)
+- Debe ser una **Build Variable**, no una Environment Variable
+- Debe incluir `/api` al final de la URL
+- Se usa durante el build de la aplicación
 - Railway maneja automáticamente el enrutamiento HTTPS
-- Puedes encontrar esta URL en el dashboard del servicio backend
+- Puedes encontrar la URL del backend en: Backend Service → Settings → Domains
 
 ### 3. Configurar el Puerto
 

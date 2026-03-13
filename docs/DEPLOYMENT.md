@@ -71,30 +71,34 @@ Si no lo detecta:
 2. En la sección **Settings** → **Domains**
 3. Copia la URL generada (ejemplo: `https://club-socios-backend-production.up.railway.app`)
 
-### 3.2 Configurar Variable en Frontend
+### 3.2 Configurar Build Variable en Frontend
+
+⚠️ **IMPORTANTE**: Debe ser una **Build Variable**, no una variable de entorno normal.
 
 1. Ve al servicio del **frontend** en Railway
 2. Click en la pestaña **"Variables"**
-3. Click en **"+ New Variable"**
-4. Agrega:
+3. Cambia a **"Build Variables"** (pestaña superior)
+4. Click en **"+ New Variable"**
+5. Agrega:
 
 ```
-Key: BACKEND_URL
-Value: https://club-socios-backend-production.up.railway.app
+Key: VITE_API_URL
+Value: https://club-socios-backend-production.up.railway.app/api
 ```
 
-**⚠️ IMPORTANTE:**
-- NO incluyas slash final en la URL
+**⚠️ PUNTOS CLAVE:**
+- **Build Variable**, NO Environment Variable
+- Debe incluir `/api` al final
 - Usa la URL completa incluyendo `https://`
-- Railway maneja el enrutamiento automáticamente (el backend expone puerto 8080 internamente)
-- NO incluyas el puerto en la URL: usa `https://backend.app`, no `https://backend.app:8080`
+- NO incluyas puerto (Railway maneja el enrutamiento)
+- Esta variable se usa durante el **build** de la aplicación
 - Asegúrate de copiar la URL exacta del backend
 
 ## 🌐 Paso 4: Configurar Dominio
 
 ### 4.1 Generar Dominio de Railway
 
-1. En el servicio frontend, ve a **Settings** → **Domains**
+1. En el servicio frontend, ve a **Settings** → **Networking**
 2. Click en **"Generate Domain"**
 3. Railway generará una URL como: `club-socios-frontend.up.railway.app`
 4. Guarda esta URL para configurar CORS en el backend
