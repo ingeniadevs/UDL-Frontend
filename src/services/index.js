@@ -2,6 +2,7 @@ import api from './api'
 
 export const authService = {
   async loginAdmin(email, password) {
+    console.log("base url:",api.defaults.baseURL);
     const response = await api.post('/auth/admin/login', { email, password })
     return response.data
   },
